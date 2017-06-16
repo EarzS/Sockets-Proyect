@@ -5,6 +5,8 @@
  */
 package programasockets;
 
+import programasockets.view.ProgramServerView;
+
 /**
  *
  * @author Hector
@@ -15,7 +17,7 @@ public class ProgramaSockets {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        ProgramServerView.main(args);
     }
     
 }
