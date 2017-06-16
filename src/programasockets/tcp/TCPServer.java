@@ -8,6 +8,7 @@ package programasockets.tcp;
 import java.net.*;
 import java.io.*;
 import java.util.logging.*;
+import programasockets.view.ProgramServerView;
 
 /**
  * - Add a list to manage clients connections if you want to close them 
@@ -19,6 +20,9 @@ import java.util.logging.*;
  * @author Hector
  */
 public class TCPServer extends Thread{
+    
+    /** View of the server. */
+    private ProgramServerView view;
     
     /** Port of the server. */
     private int port;
@@ -36,9 +40,11 @@ public class TCPServer extends Thread{
     
     /**
      * Default constructor.
+     * @param view the server's window.
      */
-    public TCPServer() {
+    public TCPServer(ProgramServerView view) {
         this(DEFAULT_PORT, DEFAULT_BUFFER_SIZE);
+        this.view = view;
     }
     
     /**
@@ -151,6 +157,7 @@ public class TCPServer extends Thread{
         try {
             Socket sClient = server.accept();
             TCPClientThread client = new TCPClientThread(sClient);
+            view.logMessage("[Server] Un nuevo cliente se ha conectado.");
         } catch (IOException ex) {
             Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -170,6 +177,8 @@ public class TCPServer extends Thread{
         byte[] buffer = new byte[bufferSize];
         in.read(buffer);
         reply = new String(buffer);
+        
+        view.logMessage("[Cliente] " + reply);
         
         return reply;
     }
@@ -219,7 +228,9 @@ public class TCPServer extends Thread{
             try {
                 while(true) {
                     request = receiveMessage(in);
-                    sendMessage(out, request);
+                    if(sendMessage(out, request)){
+                        view.logMessage("[Server] " + request);
+                    }
                 }
             }catch(EOFException ex) {
                 Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);

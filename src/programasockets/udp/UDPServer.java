@@ -12,6 +12,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import programasockets.view.ProgramServerView;
 
 /**
  * - Do something with the init, clean, startServer and stopServer, 
@@ -20,6 +21,9 @@ import java.util.logging.Logger;
  * @author Hector
  */
 public class UDPServer {
+    
+    /** View of the server. */
+    private ProgramServerView view;
     
     /** Port of the server. */
     private int port;
@@ -36,8 +40,9 @@ public class UDPServer {
     /**
      * Default constructor.
      */
-    public UDPServer() {
+    public UDPServer(ProgramServerView view) {
         this(DEFAULT_PORT, DEFAULT_BUFFER_SIZE);
+        this.view = view;
     }
     
     /**
@@ -136,6 +141,9 @@ public class UDPServer {
             byte[] buffer = new byte[bufferSize];
             request = new DatagramPacket(buffer, bufferSize);
             server.receive(request);
+            
+            view.logMessage("[Cliente] " + new String(request.getData()));
+            
         } catch (IOException ex) {
             Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -163,6 +171,7 @@ public class UDPServer {
         try {
             DatagramPacket reply = createPacket(message, bufferSize, host, port);
             server.send(reply);
+            view.logMessage("[Server] " + message);
         } catch (IOException ex) {
             Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
             return false;
