@@ -32,8 +32,8 @@ public class ProgramServerView extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         
-        tcpServer = new TCPServer();
-        udpServer = new UDPServer();
+        tcpServer = new TCPServer(this);
+        udpServer = new UDPServer(this);
         
         protocol = "Tipo de Protocolo";
         running = false;
@@ -55,7 +55,7 @@ public class ProgramServerView extends javax.swing.JFrame {
         bIniciar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txEnviar = new javax.swing.JTextField();
         bEnviar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -95,9 +95,12 @@ public class ProgramServerView extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Sistemas Distribuidos");
 
-        jTextField1.setText("jTextField1");
-
         bEnviar.setText("Enviar");
+        bEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bEnviarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -124,7 +127,7 @@ public class ProgramServerView extends javax.swing.JFrame {
                 .addGap(180, 180, 180))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
                 .addContainerGap())
@@ -142,7 +145,7 @@ public class ProgramServerView extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bEnviar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -180,6 +183,12 @@ public class ProgramServerView extends javax.swing.JFrame {
         txMensajes.setText("");
     }//GEN-LAST:event_bLimpiarActionPerformed
 
+    private void bEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEnviarActionPerformed
+        String message = txEnviar.getText();
+        // TODO. Method for getting client to send
+        txEnviar.setText("");
+    }//GEN-LAST:event_bEnviarActionPerformed
+
     public void startServer() {
         if(protocol.toLowerCase().contains("protocolo")) {
             JOptionPane.showMessageDialog(this, "Por favor elija un protocolo.", 
@@ -197,10 +206,11 @@ public class ProgramServerView extends javax.swing.JFrame {
         }else if(protocol.equals("TCP")) {
             tcpServer.startServer();
         }else {
-            // Multicast code
+            logMessage("[Server] Multicast por implementar.");
+            return;
         }
         
-        txMensajes.append("[Server] Servidor iniciado.\n");
+        logMessage("[Server] Servidor iniciado.");
     }
     
     public void stopServer() {
@@ -209,10 +219,15 @@ public class ProgramServerView extends javax.swing.JFrame {
         }else if(protocol.equals("TCP")) {
             tcpServer.stopServer();
         }else {
-            // Multicast code
+            logMessage("[Server] Multicast por implementar.");
+            return;
         }
         
-        txMensajes.append("[Server] Servidor detenido.\n");
+        logMessage("[Server] Servidor detenido.");
+    }
+    
+    public final void logMessage(String message) {
+        txMensajes.append(message + "\n");
     }
     
     /**
@@ -259,7 +274,7 @@ public class ProgramServerView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField txEnviar;
     private javax.swing.JTextArea txMensajes;
     // End of variables declaration//GEN-END:variables
 }
