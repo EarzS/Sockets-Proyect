@@ -8,12 +8,16 @@ package programasockets.tcp;
 import java.net.*;
 import java.io.*;
 import java.util.logging.*;
+import programasockets.view.ProgramClientView;
 
 /**
  *
  * @author Hector
  */
 public class TCPClient {
+    
+    /** View of the client. */
+    private ProgramClientView view;
     
     /** Port of the server. */
     private int port;
@@ -42,8 +46,9 @@ public class TCPClient {
     /**
      * Default constructor.
      */
-    public TCPClient() {
+    public TCPClient(ProgramClientView view) {
         this(DEFAULT_PORT, DEFAULT_HOSTNAME, DEFAULT_BUFFER_SIZE, DEFAULT_TIMEOUT);
+        this.view = view;
     }
     
     /**
@@ -158,6 +163,7 @@ public class TCPClient {
             byte[] buffer = new byte[bufferSize];
             in.read(buffer);
             reply = new String(buffer);
+            view.logMessage("[Server] " + reply);
         } catch (SocketTimeoutException ex) {
             Logger.getLogger(TCPClient.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

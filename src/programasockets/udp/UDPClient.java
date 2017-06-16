@@ -13,12 +13,16 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import programasockets.view.ProgramClientView;
 
 /**
  *
  * @author Hector
  */
 public class UDPClient {
+    
+    /** View of the client. */
+    private ProgramClientView view;
     
     /** Port of the server. */
     private int port;
@@ -43,8 +47,9 @@ public class UDPClient {
     /**
      * Default constructor.
      */
-    public UDPClient() {
+    public UDPClient(ProgramClientView view) {
         this(DEFAULT_PORT, DEFAULT_HOSTNAME, DEFAULT_BUFFER_SIZE, DEFAULT_TIMEOUT);
+        this.view = view;
     }
     
     /**
@@ -144,6 +149,7 @@ public class UDPClient {
             byte[] buffer = new byte[bufferSize];
             reply = new DatagramPacket(buffer, bufferSize);
             client.receive(reply);
+            view.logMessage("[Server] " + reply);
         } catch (SocketTimeoutException ex) {
             Logger.getLogger(UDPClient.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
