@@ -168,7 +168,7 @@ public class TCPClient {
     }
     
     /**
-     * Sends a message to a certain client with a hostname.
+     * Sends a message to the server.
      * @param message the message to send
      * @return true if the message got sent or false otherwise
      */

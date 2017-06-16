@@ -138,6 +138,42 @@ public class TCPServer extends Thread{
         }
     }
     
+    // ========================Sending and receiving==========================
+    
+    /**
+     * Receives a response from a client.
+     * @param in the inputstream between the server and the client.
+     * @return the message of the sender, null if a problem occurs
+     */
+    public String receiveMessage(DataInputStream in) throws IOException {
+        
+        String reply = null;
+        
+        byte[] buffer = new byte[bufferSize];
+        in.read(buffer);
+        reply = new String(buffer);
+        
+        return reply;
+    }
+    
+    /**
+     * Sends a message to a certain client.
+     * @param out the outputstream between the server and the client.
+     * @param message the message to send
+     * @return true if the message got sent or false otherwise
+     */
+    public boolean sendMessage(DataOutputStream out, String message) {
+        try {
+            byte[] buffer = message.getBytes();
+            out.write(buffer);
+        } catch (IOException ex) {
+            Logger.getLogger(TCPClient.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        
+        return true;
+    }
+    
     class TCPClientThread extends Thread{
         
         /** The socket of the client. */
@@ -164,8 +200,8 @@ public class TCPServer extends Thread{
             String request;
             try {
                 while(true) {
-                    request = in.readUTF();
-                    out.writeUTF(request);
+                    request = receiveMessage(in);
+                    sendMessage(out, request);
                 }
             }catch(EOFException ex) {
                 Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
