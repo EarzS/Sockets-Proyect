@@ -126,7 +126,7 @@ public class UDPClient {
      * Releases the resources of the object, UDPClient cannot be used 
      * after cleaning.
      */
-    public void clean() {
+    public final void clean() {
         client.close();
         client = null;
     }
