@@ -44,3 +44,9 @@ el hostname de la maquina al ejecutar el bytecode.
 base al mensaje del cliente.
 
 - Para establecer el timeout se utilizo setSoTimeout
+
+#############################################################################
+
+Para realizar la implementacion en el TCP fue un poco diferente, debido a los
+streams para entrada y salidas de datos, se opto por crear hilos para los
+clientes.
