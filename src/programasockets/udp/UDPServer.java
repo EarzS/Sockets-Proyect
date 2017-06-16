@@ -14,7 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * - Do something with the init, clean, startServer and stopServer, 
+ * its redundant.
+ * 
  * @author Hector
  */
 public class UDPServer {
@@ -82,6 +84,20 @@ public class UDPServer {
     }
     
     // ========================Starting and destroying==========================
+    
+    /**
+     * For being homogeneous with the TCPServer method.
+     */
+    public void startServer() {
+        init();
+    }
+    
+    /**
+     * For being homogeneous with the TCPServer method.
+     */
+    public void stopServer() {
+        clean();
+    }
     
     /**
      * Creates a new server socket in a certain port.

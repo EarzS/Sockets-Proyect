@@ -13,6 +13,9 @@ import java.util.logging.*;
  * - Add a list to manage clients connections if you want to close them 
  * afterwards
  * 
+ * - Do something with the init, clean, startServer and stopServer, 
+ * its redundant.
+ * 
  * @author Hector
  */
 public class TCPServer extends Thread{
@@ -81,6 +84,21 @@ public class TCPServer extends Thread{
     }
     
     // ========================Starting and destroying==========================
+    
+    /**
+     * It's a more elegant way to start the thread.
+     */
+    public void startServer() {
+        this.start();
+    }
+    
+    /**
+     * Detiene el servidor, no se puede usar denuevo el servidor una vez usado 
+     * este metodo.
+     */
+    public void stopServer() {
+        running = false;
+    }
     
     /**
      * Creates a new server socket in a certain port.
