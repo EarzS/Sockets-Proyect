@@ -58,20 +58,15 @@ public class TCPClient {
      * @param bufferSize custom size of buffer
      */
     public TCPClient(int port, String hostname, int bufferSize, int timeout) {
-        if(port <= 0) {
-            this.port = DEFAULT_PORT;
-        }
+        this.port = port <= 0? DEFAULT_PORT : port;
+        this.bufferSize = bufferSize <= 0? DEFAULT_BUFFER_SIZE : bufferSize;
+        this.timeout = timeout < DEFAULT_TIMEOUT? DEFAULT_TIMEOUT : timeout; 
+        
         if(hostname == null || hostname.isEmpty()) {
             this.hostname = DEFAULT_HOSTNAME;
         }
-        if(bufferSize <= 0) {
-            this.bufferSize = DEFAULT_BUFFER_SIZE;
-        }
-        if(timeout < DEFAULT_TIMEOUT) {
-            this.timeout = DEFAULT_TIMEOUT;
-        }
         
-        init();
+        this.hostname = hostname;
     }
     
     // ================================ GET AND SET ============================

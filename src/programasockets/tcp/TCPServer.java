@@ -53,12 +53,8 @@ public class TCPServer extends Thread{
      * @param bufferSize custom size of buffer
      */
     public TCPServer(int port, int bufferSize) {
-        if(port <= 0) {
-            this.port = DEFAULT_PORT;
-        }
-        if(bufferSize <= 0) {
-            this.bufferSize = DEFAULT_BUFFER_SIZE;
-        }
+        this.port = port;
+        this.bufferSize = bufferSize;
         running = false;
     }
 

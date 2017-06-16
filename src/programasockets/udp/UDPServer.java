@@ -20,10 +20,10 @@ import programasockets.view.ProgramServerView;
  * 
  * @author Hector
  */
-public class UDPServer {
+public class UDPServer extends Thread{
     
     /** View of the server. */
-    private ProgramServerView view;
+    //private ProgramServerView view;
     
     /** Port of the server. */
     private int port;
@@ -37,12 +37,15 @@ public class UDPServer {
     /** The default port of the server. */
     private static final int DEFAULT_PORT = 6789;
     
+    /** Flag when the server is running. */
+    private boolean running;
+    
     /**
      * Default constructor.
      */
-    public UDPServer(ProgramServerView view) {
+    public UDPServer(/*ProgramServerView view*/) {
         this(DEFAULT_PORT, DEFAULT_BUFFER_SIZE);
-        this.view = view;
+        //this.view = view;
     }
     
     /**
@@ -51,14 +54,10 @@ public class UDPServer {
      * @param bufferSize custom size of buffer
      */
     public UDPServer(int port, int bufferSize) {
-        if(port <= 0) {
-            this.port = DEFAULT_PORT;
-        }
-        if(bufferSize <= 0) {
-            this.bufferSize = DEFAULT_BUFFER_SIZE;
-        }
+        this.port = port <= 0? DEFAULT_PORT : port;
+        this.bufferSize = bufferSize <= 0? DEFAULT_BUFFER_SIZE : bufferSize;
         
-        init();
+        running = false;
     }
 
     // ================================ GET AND SET ============================
@@ -94,14 +93,14 @@ public class UDPServer {
      * For being homogeneous with the TCPServer method.
      */
     public void startServer() {
-        init();
+        this.start();
     }
     
     /**
      * For being homogeneous with the TCPServer method.
      */
     public void stopServer() {
-        clean();
+        running = false;
     }
     
     /**
@@ -114,6 +113,8 @@ public class UDPServer {
         
         try {
             server = new DatagramSocket(port);
+            running = true;
+            
         } catch (SocketException ex) {
             Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -141,9 +142,9 @@ public class UDPServer {
             byte[] buffer = new byte[bufferSize];
             request = new DatagramPacket(buffer, bufferSize);
             server.receive(request);
-            
-            view.logMessage("[Cliente] " + new String(request.getData()));
-            
+            System.out.println(new String(request.getData()));
+           // if(view != null) view.logMessage("[Cliente] " + new String(request.getData()));
+           
         } catch (IOException ex) {
             Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -171,7 +172,7 @@ public class UDPServer {
         try {
             DatagramPacket reply = createPacket(message, bufferSize, host, port);
             server.send(reply);
-            view.logMessage("[Server] " + message);
+//            if(view != null) view.logMessage("[Server] " + message);
         } catch (IOException ex) {
             Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
             return false;
@@ -205,5 +206,24 @@ public class UDPServer {
                                port);
 
         return packet;
+    }
+    
+    public void run() {
+        init();
+        
+        while(running) {
+            receiveMessage();
+        }
+        
+        clean();
+    }
+    
+    public static void main(String[] args) {
+        UDPServer server = new UDPServer();
+        server.init();
+        System.out.println("Running server " + server.getPort());
+        DatagramPacket sender = server.receiveMessage();
+        server.sendMessage("OK", sender);
+        server.clean();
     }
 }

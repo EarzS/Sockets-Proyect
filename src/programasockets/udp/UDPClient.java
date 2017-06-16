@@ -22,7 +22,7 @@ import programasockets.view.ProgramClientView;
 public class UDPClient {
     
     /** View of the client. */
-    private ProgramClientView view;
+    //private ProgramClientView view;
     
     /** Port of the server. */
     private int port;
@@ -47,9 +47,9 @@ public class UDPClient {
     /**
      * Default constructor.
      */
-    public UDPClient(ProgramClientView view) {
+    public UDPClient(/*ProgramClientView view*/) {
         this(DEFAULT_PORT, DEFAULT_HOSTNAME, DEFAULT_BUFFER_SIZE, DEFAULT_TIMEOUT);
-        this.view = view;
+       // this.view = view;
     }
     
     /**
@@ -59,18 +59,15 @@ public class UDPClient {
      * @param bufferSize custom size of buffer
      */
     public UDPClient(int port, String hostname, int bufferSize, int timeout) {
-        if(port <= 0) {
-            this.port = DEFAULT_PORT;
-        }
+        this.port = port <= 0? DEFAULT_PORT : port;
+        this.bufferSize = bufferSize <= 0? DEFAULT_BUFFER_SIZE : bufferSize;
+        this.timeout = timeout < DEFAULT_TIMEOUT? DEFAULT_TIMEOUT : timeout; 
+        
         if(hostname == null || hostname.isEmpty()) {
             this.hostname = DEFAULT_HOSTNAME;
         }
-        if(bufferSize <= 0) {
-            this.bufferSize = DEFAULT_BUFFER_SIZE;
-        }
-        if(timeout < DEFAULT_TIMEOUT) {
-            this.timeout = DEFAULT_TIMEOUT;
-        }
+        
+        this.hostname = hostname;
         
         init();
     }
@@ -149,7 +146,7 @@ public class UDPClient {
             byte[] buffer = new byte[bufferSize];
             reply = new DatagramPacket(buffer, bufferSize);
             client.receive(reply);
-            view.logMessage("[Server] " + reply);
+            //view.logMessage("[Server] " + reply);
         } catch (SocketTimeoutException ex) {
             Logger.getLogger(UDPClient.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -197,10 +194,20 @@ public class UDPClient {
 
         DatagramPacket packet = 
             new DatagramPacket(bMessage,
-                               size,
+                               bufferSize, // Should be size, not the lenght
                                host,
                                port);
 
         return packet;
+    }
+    
+    public static void main(String[] args) {
+        UDPClient client = new UDPClient();
+        System.out.println("Running client" + client.getPort());
+        
+        client.init();
+        client.sendMessage("Hola");
+        client.receiveMessage();
+        client.clean();
     }
 }
