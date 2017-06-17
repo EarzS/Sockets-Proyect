@@ -52,6 +52,7 @@ public class ProgramClientView extends javax.swing.JFrame {
         bPrueba = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Sistemas Distribuidos - Taller Sockets - Cliente");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -72,6 +73,12 @@ public class ProgramClientView extends javax.swing.JFrame {
         txMensajes.setColumns(20);
         txMensajes.setRows(5);
         jScrollPane1.setViewportView(txMensajes);
+
+        txEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txEnviarActionPerformed(evt);
+            }
+        });
 
         bEnviar.setText("Enviar");
         bEnviar.addActionListener(new java.awt.event.ActionListener() {
@@ -198,17 +205,21 @@ public class ProgramClientView extends javax.swing.JFrame {
         txEnviar.setText("");
     }//GEN-LAST:event_bEnviarActionPerformed
 
+    private void txEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txEnviarActionPerformed
+        bEnviar.doClick();
+    }//GEN-LAST:event_txEnviarActionPerformed
+
     public void startConnection() {
         if(protocol.equals("UDP")) {
             udpClient.init();
+            logMessage("[Cliente] Cliente UDP Iniciado.");
         }else if(protocol.equals("TCP")) {
             tcpClient.init();
+            logMessage("[Cliente] Conexion establecida.");
         }else {
             logMessage("[Cliente] Multicast por implementar.");
             return;
         }
-        
-        logMessage("[Cliente] Conexion establecida.");
     }
     
     public final void logMessage(String message) {
