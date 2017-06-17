@@ -5,6 +5,7 @@
  */
 package programasockets;
 
+import programasockets.view.ProgramClientView;
 import programasockets.view.ProgramServerView;
 
 /**
@@ -18,6 +19,7 @@ public class ProgramaSockets {
      */
     public static void main(String[] args) {
         ProgramServerView.main(args);
+        ProgramClientView.main(args);
     }
     
 }
