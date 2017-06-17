@@ -7,6 +7,7 @@ package programasockets.view;
 
 import programasockets.tcp.TCPClient;
 import programasockets.udp.UDPClient;
+import programasockets.udp.multicast.MultiCastPeer;
 
 /**
  *
@@ -14,9 +15,15 @@ import programasockets.udp.UDPClient;
  */
 public class ProgramClientView extends javax.swing.JFrame {
 
-    private String protocol;
+    /** TCP Client. */
     private TCPClient tcpClient;
+    /** UDP Client. */
     private UDPClient udpClient;
+    /** Multicast client. */
+    private final MultiCastPeer mcClient;
+    
+    /** Protocol that the user wants. */
+    private String protocol;
     
     /**
      * Creates new form ProgramClientView
@@ -25,6 +32,7 @@ public class ProgramClientView extends javax.swing.JFrame {
         initComponents();
         tcpClient = new TCPClient(this);
         udpClient = new UDPClient(this);
+        mcClient = new MultiCastPeer(this);
     }
 
     /**
@@ -196,8 +204,8 @@ public class ProgramClientView extends javax.swing.JFrame {
             udpClient.sendMessage(message);
         }else if(protocol.equals("TCP")) {
             tcpClient.sendMessage(message);
-        }else {
-            logMessage("[Cliente] Multicast por implementar");
+        }else if(protocol.equals("Multicast")){
+            mcClient.sendMessage(message);
         }
         
         logMessage("[Cliente] " + message);

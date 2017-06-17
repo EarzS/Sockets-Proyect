@@ -8,6 +8,7 @@ package programasockets.view;
 import javax.swing.JOptionPane;
 import programasockets.tcp.TCPServer;
 import programasockets.udp.UDPServer;
+import programasockets.udp.multicast.MultiCastPeer;
 
 /**
  *
@@ -19,6 +20,8 @@ public class ProgramServerView extends javax.swing.JFrame {
     private final TCPServer tcpServer;
     /** UDP Server. */
     private final UDPServer udpServer;
+    /** Multi cast server. */
+    private final MultiCastPeer mcServer;
     
     /** Protocol that the user wants. */
     private String protocol;
@@ -34,6 +37,7 @@ public class ProgramServerView extends javax.swing.JFrame {
         
         tcpServer = new TCPServer(this);
         udpServer = new UDPServer(this);
+        mcServer = new MultiCastPeer(this);
         
         protocol = "Tipo de Protocolo";
         running = false;
@@ -205,9 +209,8 @@ public class ProgramServerView extends javax.swing.JFrame {
             udpServer.startServer();
         }else if(protocol.equals("TCP")) {
             tcpServer.startServer();
-        }else {
-            logMessage("[Server] Multicast por implementar.");
-            return;
+        }else if(protocol.equals("Multicast")){
+            mcServer.startServer();
         }
         
         logMessage("[Server] Servidor iniciado.");
@@ -218,9 +221,8 @@ public class ProgramServerView extends javax.swing.JFrame {
             udpServer.stopServer();
         }else if(protocol.equals("TCP")) {
             tcpServer.stopServer();
-        }else {
-            logMessage("[Server] Multicast por implementar.");
-            return;
+        }else if(protocol.equals("Multicast")){
+            mcServer.stopServer();
         }
         
         logMessage("[Server] Servidor detenido.");
