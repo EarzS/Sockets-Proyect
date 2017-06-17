@@ -19,7 +19,7 @@ import programasockets.view.ProgramServerView;
  * 
  * @author Hector
  */
-public class TCPServer extends Thread{
+public class TCPServer implements Runnable{
     
     /** View of the server. */
     private ProgramServerView view;
@@ -32,6 +32,9 @@ public class TCPServer extends Thread{
     private ServerSocket server;
     /** Indicates if the server is running. */
     private boolean running;
+    /** Thread of the server. */
+    private Thread thread;
+    
     
     /** The default buffer size of the messages in kb. */
     private static final int DEFAULT_BUFFER_SIZE = 1000;
@@ -91,7 +94,8 @@ public class TCPServer extends Thread{
      * It's a more elegant way to start the thread.
      */
     public void startServer() {
-        this.start();
+        thread = new Thread(this);
+        thread.start();
     }
     
     /**
@@ -99,7 +103,12 @@ public class TCPServer extends Thread{
      * este metodo.
      */
     public void stopServer() {
-        running = false;
+        try {
+            running = false;
+            server.close();
+        } catch (IOException ex) {
+            Logger.getLogger(TCPServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**

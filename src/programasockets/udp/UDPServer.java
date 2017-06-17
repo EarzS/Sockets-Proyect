@@ -20,7 +20,7 @@ import programasockets.view.ProgramServerView;
  * 
  * @author Hector
  */
-public class UDPServer extends Thread{
+public class UDPServer implements Runnable{
     
     /** View of the server. */
     private ProgramServerView view;
@@ -39,6 +39,8 @@ public class UDPServer extends Thread{
     
     /** Flag when the server is running. */
     private boolean running;
+    /** Thread for the server. */
+    private Thread thread;
     
     /**
      * Default constructor.
@@ -93,11 +95,8 @@ public class UDPServer extends Thread{
      * For being homogeneous with the TCPServer method.
      */
     public void startServer() {
-        if(this.isAlive()) {
-            
-        }
-        
-        this.start();
+        thread = new Thread(this);
+        thread.start();
     }
     
     /**

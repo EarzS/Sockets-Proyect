@@ -16,7 +16,7 @@ import programasockets.view.ProgramServerView;
  *
  * @author Hector
  */
-public class MultiCastPeer extends Thread{
+public class MultiCastPeer implements Runnable{
     
     /** View of the server. */
     private ProgramServerView sView;
@@ -45,13 +45,15 @@ public class MultiCastPeer extends Thread{
     
     /** Flag when the server is running. */
     private boolean running;
+    /** Thread of the server. */
+    private Thread thread;
     
     /**
      * Default constructor.
      * @param view
      */
     public MultiCastPeer(ProgramServerView view) {
-        this(DEFAULT_PORT, DEFAULT_BUFFER_SIZE);
+        this(DEFAULT_PORT, DEFAULT_BUFFER_SIZE, DEFAULT_GROUP, DEFAULT_TIMEOUT);
         this.sView = view;
         this.cView = null;
     }
@@ -61,7 +63,7 @@ public class MultiCastPeer extends Thread{
      * @param view
      */
     public MultiCastPeer(ProgramClientView view) {
-        this(DEFAULT_PORT, DEFAULT_BUFFER_SIZE);
+        this(DEFAULT_PORT, DEFAULT_BUFFER_SIZE, DEFAULT_GROUP, DEFAULT_TIMEOUT);
         this.sView = null;
         this.cView = view;
     }
@@ -71,9 +73,11 @@ public class MultiCastPeer extends Thread{
      * @param port custom port
      * @param bufferSize custom size of buffer
      */
-    public MultiCastPeer(int port, int bufferSize) {
+    public MultiCastPeer(int port, int bufferSize, String group, int timeout) {
         this.port = port <= 0? DEFAULT_PORT : port;
         this.bufferSize = bufferSize <= 0? DEFAULT_BUFFER_SIZE : bufferSize;
+        this.group = group;
+        this.timeout = timeout;
     }
     
     // ================================ GET AND SET ============================
@@ -109,7 +113,8 @@ public class MultiCastPeer extends Thread{
      * For being homogeneous with the TCPServer method.
      */
     public void startServer() {
-        this.start();
+        thread = new Thread(this);
+        thread.start();
     }
     
     /**
