@@ -60,11 +60,6 @@ public class ProgramClientView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Sistemas Distribuidos - Taller Sockets - Cliente");
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -240,12 +235,6 @@ public class ProgramClientView extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_bPruebaActionPerformed
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        udpClient.clean();
-        tcpClient.clean();
-        mcClient.clean();
-    }//GEN-LAST:event_formWindowClosing
 
     public void startConnection() {
         if(protocol.equals("UDP")) {
