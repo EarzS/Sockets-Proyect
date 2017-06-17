@@ -52,15 +52,19 @@ public class ProgramClientView extends javax.swing.JFrame {
         txEnviar = new javax.swing.JTextField();
         bEnviar = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
-        sTamano = new javax.swing.JSlider();
-        txTamano = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         sCantidad = new javax.swing.JSpinner();
         bPrueba = new javax.swing.JButton();
+        cbTamano = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Sistemas Distribuidos - Taller Sockets - Cliente");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -95,15 +99,20 @@ public class ProgramClientView extends javax.swing.JFrame {
             }
         });
 
-        sTamano.setMinorTickSpacing(8);
-
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Tamaño del paquete");
+        jLabel3.setText("Tamaño del paquete (Kb)");
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Cantidad de mensajes");
 
         bPrueba.setText("Prueba");
+        bPrueba.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bPruebaActionPerformed(evt);
+            }
+        });
+
+        cbTamano.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "8", "10", "20", "50", "100" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -140,11 +149,9 @@ public class ProgramClientView extends javax.swing.JFrame {
                                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(sCantidad)))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(sTamano, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txTamano, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                                    .addComponent(cbTamano, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(bPrueba, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
@@ -173,15 +180,13 @@ public class ProgramClientView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(sTamano, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txTamano, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbTamano, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(bPrueba, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pack();
@@ -217,15 +222,45 @@ public class ProgramClientView extends javax.swing.JFrame {
         bEnviar.doClick();
     }//GEN-LAST:event_txEnviarActionPerformed
 
+    private void bPruebaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPruebaActionPerformed
+        
+        udpClient.setBufferSize(Integer.parseInt((String)cbTamano.getSelectedItem()));
+        tcpClient.setBufferSize(Integer.parseInt((String)cbTamano.getSelectedItem()));
+        mcClient.setBufferSize(Integer.parseInt((String)cbTamano.getSelectedItem()));
+        
+        for(int i = 0 ; i < ((int) sCantidad.getValue()); i++) {
+            if(protocol.equals("UDP")) {
+                udpClient.sendPackage();
+            }else if(protocol.equals("TCP")) {
+                tcpClient.sendPackage();
+            }else if(protocol.equals("Multicast")){
+                mcClient.sendPackage();
+            }
+        }
+        
+        
+    }//GEN-LAST:event_bPruebaActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        udpClient.clean();
+        tcpClient.clean();
+        mcClient.clean();
+    }//GEN-LAST:event_formWindowClosing
+
     public void startConnection() {
         if(protocol.equals("UDP")) {
             udpClient.init();
             logMessage("[Cliente] Cliente UDP Iniciado.");
         }else if(protocol.equals("TCP")) {
-            tcpClient.init();
-            logMessage("[Cliente] Conexion establecida.");
+            if(tcpClient.init()) {
+                logMessage("[Cliente] Conexion establecida.");
+            }else {
+                logMessage("[Cliente] No se pudo establecer la conexion con el servidor.");
+            }
+                
         }else {
-            logMessage("[Cliente] Multicast por implementar.");
+            mcClient.startServer();
+            logMessage("[Multicast] Cliente multicast Iniciado.");
             return;
         }
     }
@@ -273,6 +308,7 @@ public class ProgramClientView extends javax.swing.JFrame {
     private javax.swing.JButton bEnviar;
     private javax.swing.JButton bPrueba;
     private javax.swing.JComboBox<String> cbProtocolo;
+    private javax.swing.JComboBox<String> cbTamano;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -280,9 +316,7 @@ public class ProgramClientView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSpinner sCantidad;
-    private javax.swing.JSlider sTamano;
     private javax.swing.JTextField txEnviar;
     private javax.swing.JTextArea txMensajes;
-    private javax.swing.JTextField txTamano;
     // End of variables declaration//GEN-END:variables
 }

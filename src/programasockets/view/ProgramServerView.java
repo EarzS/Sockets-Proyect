@@ -62,8 +62,13 @@ public class ProgramServerView extends javax.swing.JFrame {
         txEnviar = new javax.swing.JTextField();
         bEnviar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Sistemas Distribuidos - Taller Sockets - Servidor");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         txMensajes.setEditable(false);
         txMensajes.setColumns(20);
@@ -98,6 +103,12 @@ public class ProgramServerView extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Sistemas Distribuidos");
+
+        txEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txEnviarActionPerformed(evt);
+            }
+        });
 
         bEnviar.setText("Enviar");
         bEnviar.addActionListener(new java.awt.event.ActionListener() {
@@ -192,6 +203,16 @@ public class ProgramServerView extends javax.swing.JFrame {
         // TODO. Method for getting client to send
         txEnviar.setText("");
     }//GEN-LAST:event_bEnviarActionPerformed
+
+    private void txEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txEnviarActionPerformed
+        bEnviar.doClick();
+    }//GEN-LAST:event_txEnviarActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        udpServer.stopServer();
+        tcpServer.stopServer();
+        mcServer.stopServer();
+    }//GEN-LAST:event_formWindowClosing
 
     public void startServer() {
         if(protocol.toLowerCase().contains("protocolo")) {
