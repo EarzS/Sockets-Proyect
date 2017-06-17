@@ -22,7 +22,7 @@ import programasockets.view.ProgramClientView;
 public class UDPClient {
     
     /** View of the client. */
-    //private ProgramClientView view;
+    private ProgramClientView view;
     
     /** Port of the server. */
     private int port;
@@ -47,9 +47,9 @@ public class UDPClient {
     /**
      * Default constructor.
      */
-    public UDPClient(/*ProgramClientView view*/) {
+    public UDPClient(ProgramClientView view) {
         this(DEFAULT_PORT, DEFAULT_HOSTNAME, DEFAULT_BUFFER_SIZE, DEFAULT_TIMEOUT);
-       // this.view = view;
+        this.view = view;
     }
     
     /**
@@ -146,7 +146,7 @@ public class UDPClient {
             byte[] buffer = new byte[bufferSize];
             reply = new DatagramPacket(buffer, bufferSize);
             client.receive(reply);
-            //view.logMessage("[Server] " + reply);
+            view.logMessage("[Server] " + reply);
         } catch (SocketTimeoutException ex) {
             Logger.getLogger(UDPClient.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -194,20 +194,20 @@ public class UDPClient {
 
         DatagramPacket packet = 
             new DatagramPacket(bMessage,
-                               bufferSize, // Should be size, not the lenght
+                               bMessage.length, // Should be size, not the lenght
                                host,
                                port);
 
         return packet;
     }
-    
+    /*
     public static void main(String[] args) {
         UDPClient client = new UDPClient();
-        System.out.println("Running client" + client.getPort());
+        System.out.println("Running client" + client.getPort() + " " + client.getBufferSize());
         
         client.init();
         client.sendMessage("Hola");
         client.receiveMessage();
         client.clean();
-    }
+    }*/
 }
