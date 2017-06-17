@@ -23,7 +23,7 @@ import programasockets.view.ProgramServerView;
 public class UDPServer extends Thread{
     
     /** View of the server. */
-    //private ProgramServerView view;
+    private ProgramServerView view;
     
     /** Port of the server. */
     private int port;
@@ -43,9 +43,9 @@ public class UDPServer extends Thread{
     /**
      * Default constructor.
      */
-    public UDPServer(/*ProgramServerView view*/) {
+    public UDPServer(ProgramServerView view) {
         this(DEFAULT_PORT, DEFAULT_BUFFER_SIZE);
-        //this.view = view;
+        this.view = view;
     }
     
     /**
@@ -93,6 +93,10 @@ public class UDPServer extends Thread{
      * For being homogeneous with the TCPServer method.
      */
     public void startServer() {
+        if(this.isAlive()) {
+            
+        }
+        
         this.start();
     }
     
@@ -101,6 +105,7 @@ public class UDPServer extends Thread{
      */
     public void stopServer() {
         running = false;
+        server.close();
     }
     
     /**
@@ -142,8 +147,7 @@ public class UDPServer extends Thread{
             byte[] buffer = new byte[bufferSize];
             request = new DatagramPacket(buffer, bufferSize);
             server.receive(request);
-            System.out.println(new String(request.getData()));
-           // if(view != null) view.logMessage("[Cliente] " + new String(request.getData()));
+            view.logMessage("[Cliente] " + new String(request.getData()));
            
         } catch (IOException ex) {
             Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
@@ -159,7 +163,7 @@ public class UDPServer extends Thread{
      * @return true if the message got sent or false otherwise
      */
     public boolean sendMessage(String message, DatagramPacket sender) {
-        return sendMessage(message, sender.getAddress());
+        return sendMessage(message, sender.getAddress(), sender.getPort());
     }
     
     /**
@@ -168,11 +172,11 @@ public class UDPServer extends Thread{
      * @param host the destination hostname
      * @return true if the message got sent or false otherwise
      */
-    public boolean sendMessage(String message, InetAddress host) {
+    public boolean sendMessage(String message, InetAddress host, int port) {
         try {
             DatagramPacket reply = createPacket(message, bufferSize, host, port);
             server.send(reply);
-//            if(view != null) view.logMessage("[Server] " + message);
+            view.logMessage("[Server] " + message);
         } catch (IOException ex) {
             Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
             return false;
@@ -201,7 +205,7 @@ public class UDPServer extends Thread{
 
         DatagramPacket packet = 
             new DatagramPacket(bMessage,
-                               size,
+                               bMessage.length,
                                host,
                                port);
 
@@ -217,13 +221,14 @@ public class UDPServer extends Thread{
         
         clean();
     }
-    
+    /*
     public static void main(String[] args) {
         UDPServer server = new UDPServer();
         server.init();
         System.out.println("Running server " + server.getPort());
         DatagramPacket sender = server.receiveMessage();
+        System.out.println(sender.getPort() + " " + sender.getAddress());
         server.sendMessage("OK", sender);
         server.clean();
-    }
+    }*/
 }
