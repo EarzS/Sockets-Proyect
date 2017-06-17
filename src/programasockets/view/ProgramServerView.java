@@ -59,7 +59,7 @@ public class ProgramServerView extends javax.swing.JFrame {
         bEnviar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Sistemas Distribuidos - Taller Sockets");
+        setTitle("Sistemas Distribuidos - Taller Sockets - Servidor");
 
         txMensajes.setEditable(false);
         txMensajes.setColumns(20);
