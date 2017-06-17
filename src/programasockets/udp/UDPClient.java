@@ -146,7 +146,6 @@ public class UDPClient {
             byte[] buffer = new byte[bufferSize];
             reply = new DatagramPacket(buffer, bufferSize);
             client.receive(reply);
-            view.logMessage("[Server] " + reply);
         } catch (SocketTimeoutException ex) {
             Logger.getLogger(UDPClient.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -166,6 +165,8 @@ public class UDPClient {
             InetAddress iHost = InetAddress.getByName(hostname);
             DatagramPacket request = createPacket(message, bufferSize, iHost, port);
             client.send(request);
+            DatagramPacket reply = receiveMessage();
+            view.logMessage("[Server] " + new String(reply.getData()));
         } catch (IOException ex) {
             Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
             return false;

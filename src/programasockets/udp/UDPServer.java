@@ -147,6 +147,7 @@ public class UDPServer implements Runnable{
             request = new DatagramPacket(buffer, bufferSize);
             server.receive(request);
             view.logMessage("[Cliente] " + new String(request.getData()));
+            sendMessage("Message received.", request);
            
         } catch (IOException ex) {
             Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
