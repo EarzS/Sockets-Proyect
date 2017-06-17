@@ -148,8 +148,14 @@ public class MultiCastPeer implements Runnable{
      * after cleaning.
      */
     public void clean() {
-        server.close();
-        server = null;
+        try {
+            InetAddress hGroup = InetAddress.getByName(group);
+            server.leaveGroup (hGroup);
+            server.close();
+            server = null;
+        } catch (IOException ex) {
+            Logger.getLogger(MultiCastPeer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     // ========================Sending and receiving==========================
@@ -247,6 +253,28 @@ public class MultiCastPeer implements Runnable{
                                port);
 
         return packet;
+    }
+    
+    /**
+     * Sends a custom package with the buffer size.
+     */
+    public void sendPackage() {
+        try {
+            byte[] buffer = new byte[bufferSize];
+            
+            InetAddress hGroup = InetAddress.getByName(group);
+            
+            DatagramPacket packet =
+                    new DatagramPacket(buffer,
+                            buffer.length,
+                            hGroup,
+                            port);
+            
+            server.send(packet);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(MultiCastPeer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void run() {

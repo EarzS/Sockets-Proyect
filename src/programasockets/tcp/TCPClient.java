@@ -108,7 +108,7 @@ public class TCPClient {
     /**
      * Starts the client socket.
      */
-    public final void init() {
+    public boolean init() {
         if(server != null){
             clean();
         }
@@ -120,9 +120,13 @@ public class TCPClient {
             out = new DataOutputStream(server.getOutputStream());
         } catch (SocketException ex) {
             Logger.getLogger(TCPClient.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         } catch (IOException ex) {
             Logger.getLogger(TCPClient.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        
+        return true;
     }
     
     /**
@@ -183,6 +187,19 @@ public class TCPClient {
         }
         
         return true;
+    }
+    
+    /**
+     * Sends a custom package with the buffer size.
+     */
+    public void sendPackage() {
+        try {
+            byte[] buffer = new byte[bufferSize];
+            out.write(buffer);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(TCPClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /*

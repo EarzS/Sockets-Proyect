@@ -200,6 +200,29 @@ public class UDPClient {
 
         return packet;
     }
+    
+    /**
+     * Sends a custom package with the buffer size.
+     */
+    public void sendPackage() {
+        try {
+            byte[] buffer = new byte[bufferSize];
+            
+            InetAddress hGroup = InetAddress.getByName(hostname);
+            
+            DatagramPacket packet =
+                    new DatagramPacket(buffer,
+                            buffer.length,
+                            hGroup,
+                            port);
+            
+            client.send(packet);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(UDPClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     /*
     public static void main(String[] args) {
         UDPClient client = new UDPClient();
