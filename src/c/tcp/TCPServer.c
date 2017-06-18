@@ -1,5 +1,6 @@
 /* A simple server in the internet domain using TCP
-   The port number is passed as an argument */
+   http://www.linuxhowtos.org/C_C++/socket.htm
+   http://es.tldp.org/Tutoriales/PROG-SOCKETS/prog-sockets.html */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

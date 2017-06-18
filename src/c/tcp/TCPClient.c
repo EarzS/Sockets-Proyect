@@ -1,3 +1,6 @@
+/* A simple client in the internet domain using TCP
+   http://www.linuxhowtos.org/C_C++/socket.htm
+   http://es.tldp.org/Tutoriales/PROG-SOCKETS/prog-sockets.html */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

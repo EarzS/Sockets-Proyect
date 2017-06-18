@@ -1,3 +1,6 @@
+/* A simple client in the internet domain using UDP
+ http://www.binarytides.com/programming-udp-sockets-c-linux/ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

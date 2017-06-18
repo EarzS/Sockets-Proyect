@@ -1,5 +1,5 @@
-/* A simple server in the internet domain using TCP
-   The port number is passed as an argument */
+/* A simple server in the internet domain using UDP
+   http://www.binarytides.com/programming-udp-sockets-c-linux/ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
