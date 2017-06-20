@@ -148,8 +148,10 @@ public class UDPClient {
             client.receive(reply);
         } catch (SocketTimeoutException ex) {
             Logger.getLogger(UDPClient.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         } catch (IOException ex) {
             Logger.getLogger(UDPClient.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
         
         return reply;
@@ -166,7 +168,11 @@ public class UDPClient {
             DatagramPacket request = createPacket(message, bufferSize, iHost, port);
             client.send(request);
             DatagramPacket reply = receiveMessage();
-            view.logMessage("[Server] " + new String(reply.getData()));
+            if(reply != null){
+                view.logMessage("[Server] " + new String(reply.getData()));
+            }else {
+                view.logMessage("[Cliente] No se pudo enviar el mensaje. Timeout");
+            }
         } catch (IOException ex) {
             Logger.getLogger(UDPServer.class.getName()).log(Level.SEVERE, null, ex);
             return false;
@@ -205,7 +211,7 @@ public class UDPClient {
     /**
      * Sends a custom package with the buffer size.
      */
-    public void sendPackage() {
+    public boolean sendPackage() {
         try {
             byte[] buffer = new byte[bufferSize];
             
@@ -219,9 +225,16 @@ public class UDPClient {
             
             client.send(packet);
             
+            if(receiveMessage() == null) {
+                return false;
+            }
+            
+            
         } catch (IOException ex) {
             Logger.getLogger(UDPClient.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        return true;
     }
     
     /*
