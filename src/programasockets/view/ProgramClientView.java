@@ -223,13 +223,24 @@ public class ProgramClientView extends javax.swing.JFrame {
         tcpClient.setBufferSize(Integer.parseInt((String)cbTamano.getSelectedItem()));
         mcClient.setBufferSize(Integer.parseInt((String)cbTamano.getSelectedItem()));
         
+        boolean received;
+        
         for(int i = 0 ; i < ((int) sCantidad.getValue()); i++) {
+            
+            logMessage("[Client] Enviando " + (i+1) + " de " + ((int)sCantidad.getValue()) + " paquetes...");
+            
             if(protocol.equals("UDP")) {
-                udpClient.sendPackage();
+                received = udpClient.sendPackage();
             }else if(protocol.equals("TCP")) {
                 tcpClient.sendPackage();
             }else if(protocol.equals("Multicast")){
                 mcClient.sendPackage();
+            }
+            
+            if(received = true) {
+                logMessage("[Server] OK");
+            }else {
+                logMessage("[Server] No se pudo recibir el paquete.");
             }
         }
         
